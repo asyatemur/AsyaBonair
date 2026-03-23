@@ -43,7 +43,7 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  password      String?   // Credentials provider için şifre
+  password      String?
   accounts      Account[]
   sessions      Session[]
   createdAt     DateTime  @default(now())
@@ -60,53 +60,57 @@ model VerificationToken {
 
 // Çalışanlar Tablosu
 model Calisan {
-  id              Int       @id @default(autoincrement())
-  isim            String?   @db.VarChar(100)
-  soyisim         String?   @db.VarChar(100)
-  departman       String?   @db.VarChar(100)
-  tcNo            String?   @unique @db.VarChar(20) @map("tc_no")
-  dogumTarihi     DateTime? @map("dogum_tarihi") @db.Date
-  telNo           String?   @db.VarChar(20) @map("tel_no")
-  adres           String?   @db.Text
-  anneAdi         String?   @db.VarChar(100) @map("anne_adi")
-  babaAdi         String?   @db.VarChar(100) @map("baba_adi")
-  medeniDurum     String?   @db.VarChar(50) @map("medeni_durum")
-  cocuk           Int       @default(0)
-  kanGrubu        String?   @db.VarChar(10) @map("kan_grubu")
-  email           String    @unique @db.VarChar(255)
-  egitimDurum     String?   @db.VarChar(100) @map("egitim_durum")
-  acilIletisim    String?   @db.VarChar(100) @map("acil_iletisim")
-  acilIletisimTel String?   @db.VarChar(20) @map("acil_iletisim_tel")
-  sgkSicilNo      String?   @db.VarChar(50) @map("sgk_sicil_no")
-  bankaAdi        String?   @db.VarChar(100) @map("banka_adi")
-  iban            String?   @db.VarChar(34)
-  iseGirisTarihi  DateTime? @map("ise_giris_tarihi") @db.Date
+  id               Int       @id @default(autoincrement())
+  isim             String?   @db.VarChar(100)
+  soyisim          String?   @db.VarChar(100)
+  departman        String?   @db.VarChar(100)
+  tcNo             String?   @unique @db.VarChar(20) @map("tc_no")
+  dogumTarihi      DateTime? @map("dogum_tarihi") @db.Date
+  telNo            String?   @db.VarChar(20) @map("tel_no")
+  adres            String?   @db.Text
+  anneAdi          String?   @db.VarChar(100) @map("anne_adi")
+  babaAdi          String?   @db.VarChar(100) @map("baba_adi")
+  medeniDurum      String?   @db.VarChar(50) @map("medeni_durum")
+  cocuk            Int       @default(0)
+  kanGrubu         String?   @db.VarChar(10) @map("kan_grubu")
+  email            String    @unique @db.VarChar(255)
+  egitimDurum      String?   @db.VarChar(100) @map("egitim_durum")
+  acilIletisim     String?   @db.VarChar(100) @map("acil_iletisim")
+  acilIletisimTel  String?   @db.VarChar(20) @map("acil_iletisim_tel")
+  sgkSicilNo       String?   @db.VarChar(50) @map("sgk_sicil_no")
+  bankaAdi         String?   @db.VarChar(100) @map("banka_adi")
+  iban             String?   @db.VarChar(34)
+  iseGirisTarihi   DateTime? @map("ise_giris_tarihi") @db.Date
   istenCikisTarihi DateTime? @map("isten_cikis_tarihi") @db.Date
-  password        String    @db.VarChar(255)
-  ekstra1         String?   @db.VarChar(255) @map("ekstra_1")
-  ekstra2         String?   @db.VarChar(255) @map("ekstra_2")
-  ekstra3         String?   @db.VarChar(255) @map("ekstra_3")
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
-  hazardReports   HazardReport[]
-  incomingPapers  IncomingPaper[]
+  password         String    @db.VarChar(255)
+  ekstra1          String?   @db.VarChar(255) @map("ekstra_1")
+  ekstra2          String?   @db.VarChar(255) @map("ekstra_2")
+  ekstra3          String?   @db.VarChar(255) @map("ekstra_3")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  hazardReports            HazardReport[]
+  incomingPapers           IncomingPaper[]
   outgoingCorrespondences  OutgoingCorrespondence[]
+  meetingParticipations    MeetingParticipant[]
+  assignedTasks            MeetingTask[]
+  uploadedDocuments        AircraftDocument[]
 
   @@map("calisanlar")
 }
 
 // Hazard Reports Tablosu
 model HazardReport {
-  id              Int       @id @default(autoincrement())
-  reportNo        String?   @unique @map("report_no") @db.VarChar(50)
-  eventDate       DateTime  @map("event_date") @db.Date
-  sourceType      String?   @map("source_type") @db.VarChar(100)
-  isAnonymous     Boolean   @default(false) @map("is_anonymous")
-  title           String?   @db.VarChar(500)
-  details         String?   @db.Text
-  reportedBy      Int?      @map("reported_by")
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
+  id          Int       @id @default(autoincrement())
+  reportNo    String?   @unique @map("report_no") @db.VarChar(50)
+  eventDate   DateTime  @map("event_date") @db.Date
+  sourceType  String?   @map("source_type") @db.VarChar(100)
+  isAnonymous Boolean   @default(false) @map("is_anonymous")
+  title       String?   @db.VarChar(500)
+  details     String?   @db.Text
+  reportedBy  Int?      @map("reported_by")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
 
   reporter Calisan? @relation(fields: [reportedBy], references: [id], onDelete: Cascade)
 
@@ -115,17 +119,17 @@ model HazardReport {
 
 // Incoming Correspondences Tablosu
 model IncomingPaper {
-  id              Int       @id @default(autoincrement())
-  paperNo         String?   @unique @map("paper_no") @db.VarChar(50)
-  from            String?   @db.VarChar(255)
-  subject         String?   @db.VarChar(500)
-  date            DateTime  @map("date") @db.Date
-  content         String?   @db.Text
-  pdfPath         String?   @map("pdf_path") @db.VarChar(500)
-  pdfFileName     String?   @map("pdf_file_name") @db.VarChar(255)
-  createdBy       Int?      @map("created_by")
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
+  id          Int      @id @default(autoincrement())
+  paperNo     String?  @unique @map("paper_no") @db.VarChar(50)
+  from        String?  @db.VarChar(255)
+  subject     String?  @db.VarChar(500)
+  date        DateTime @map("date") @db.Date
+  content     String?  @db.Text
+  pdfPath     String?  @map("pdf_path") @db.VarChar(500)
+  pdfFileName String?  @map("pdf_file_name") @db.VarChar(255)
+  createdBy   Int?     @map("created_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
   creator Calisan? @relation(fields: [createdBy], references: [id], onDelete: Cascade)
 
@@ -134,17 +138,17 @@ model IncomingPaper {
 
 // Outgoing Correspondences Tablosu
 model OutgoingCorrespondence {
-  id              Int       @id @default(autoincrement())
-  paperNo         String?   @unique @map("paper_no") @db.VarChar(50)
-  to              String?   @db.VarChar(255)
-  subject         String?   @db.VarChar(500)
-  date            DateTime  @map("date") @db.Date
-  content         String?   @db.Text
-  pdfPath         String?   @map("pdf_path") @db.VarChar(500)
-  pdfFileName     String?   @map("pdf_file_name") @db.VarChar(255)
-  createdBy       Int?      @map("created_by")
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
+  id          Int      @id @default(autoincrement())
+  paperNo     String?  @unique @map("paper_no") @db.VarChar(50)
+  to          String?  @db.VarChar(255)
+  subject     String?  @db.VarChar(500)
+  date        DateTime @map("date") @db.Date
+  content     String?  @db.Text
+  pdfPath     String?  @map("pdf_path") @db.VarChar(500)
+  pdfFileName String?  @map("pdf_file_name") @db.VarChar(255)
+  createdBy   Int?     @map("created_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
   creator Calisan? @relation(fields: [createdBy], references: [id], onDelete: Cascade)
 
@@ -153,9 +157,101 @@ model OutgoingCorrespondence {
 
 // Uçaklar Tablosu
 model Ucaklar {
-  id       Int    @id @default(autoincrement())
-  register String @db.VarChar(100)
-  msn      String @db.VarChar(100)
+  id           Int                @id @default(autoincrement())
+  register     String             @db.VarChar(100)
+  msn          String             @db.VarChar(100)
+  manufacturer String?            @db.VarChar(100)
+  model        String?            @db.VarChar(100)
+  documents    AircraftDocument[]
 
   @@map("ucaklar")
+}
+
+// Aircraft Documents Tablosu
+model AircraftDocument {
+  id         Int       @id @default(autoincrement())
+  aircraftId Int       @map("aircraft_id")
+  category   String    @db.VarChar(50)
+  docType    String    @db.VarChar(100)
+  fileName   String    @db.VarChar(255)
+  filePath   String    @db.VarChar(500)
+  fileSize   Int?      @map("file_size")
+  validFrom  DateTime? @map("valid_from") @db.Date
+  validUntil DateTime? @map("valid_until") @db.Date
+  isArchived Boolean   @default(false) @map("is_archived")
+  uploadedBy Int?      @map("uploaded_by")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  aircraft Ucaklar  @relation(fields: [aircraftId], references: [id], onDelete: Cascade)
+  uploader Calisan? @relation(fields: [uploadedBy], references: [id])
+
+  @@map("aircraft_documents")
+}
+
+// Meeting Types Tablosu
+model MeetingType {
+  id       Int       @id @default(autoincrement())
+  name     String    @db.VarChar(100)
+  meetings Meeting[]
+
+  @@map("meeting_types")
+}
+
+// Meetings Tablosu
+model Meeting {
+  id              Int       @id @default(autoincrement())
+  meetingNo       String?   @unique @map("meeting_no") @db.VarChar(50)
+  title           String    @db.VarChar(500)
+  plannedDate     DateTime  @map("planned_date") @db.Date
+  initializedDate DateTime? @map("initialized_date") @db.Date
+  actualDate      DateTime? @map("actual_date") @db.Date
+  isOnline        Boolean   @default(false) @map("is_online")
+  agenda          String?   @db.Text
+  meetingMinutes  String?   @map("meeting_minutes") @db.Text
+  status          String    @default("Planned") @db.VarChar(50)
+  meetingTypeId   Int?      @map("meeting_type_id")
+  filePath        String?   @map("file_path") @db.VarChar(500)
+  fileName        String?   @map("file_name") @db.VarChar(255)
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  meetingType  MeetingType?         @relation(fields: [meetingTypeId], references: [id])
+  participants MeetingParticipant[]
+  tasks        MeetingTask[]
+
+  @@map("meetings")
+}
+
+// Meeting Katılımcıları
+model MeetingParticipant {
+  id        Int @id @default(autoincrement())
+  meetingId Int @map("meeting_id")
+  calisanId Int @map("calisan_id")
+
+  meeting Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  calisan Calisan @relation(fields: [calisanId], references: [id], onDelete: Cascade)
+
+  @@unique([meetingId, calisanId])
+  @@map("meeting_participants")
+}
+
+// Meeting Tasks Tablosu
+model MeetingTask {
+  id          Int       @id @default(autoincrement())
+  meetingId   Int       @map("meeting_id")
+  title       String    @db.VarChar(500)
+  description String?   @db.Text
+  assignedTo  Int?      @map("assigned_to")
+  dueDate     DateTime? @map("due_date") @db.Date
+  status      String    @default("Open") @db.VarChar(50)
+  filePath    String?   @map("file_path") @db.VarChar(500)
+  fileName    String?   @map("file_name") @db.VarChar(255)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  meeting  Meeting  @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  assignee Calisan? @relation(fields: [assignedTo], references: [id])
+
+  @@map("meeting_tasks")
 }
